@@ -13,7 +13,7 @@ Project aims to create a FireContact App.
 ```
 007 - FireContact App (folder)
 |
-|----readme.md         # Given to the students (Definition of the project)
+|----readme.md         #  (Definition of the project)
 SOLUTION
 ├── public
 │     └── index.html
