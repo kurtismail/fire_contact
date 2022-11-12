@@ -11,8 +11,34 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
+<<<<<<< HEAD
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+=======
+```
+007 - FireContact App (folder)
+|
+|----readme.md         #  (Definition of the project)
+SOLUTION
+├── public
+│     └── index.html
+├── src
+│    ├── components
+│    │       ├── form
+│    │       │     └── Form.js
+│    │       └── table
+│    │             └── Table.js
+│    ├── utils
+│    │       ├── customToastify.js
+│    │       └── firebase.js
+│    ├── App.js
+│    ├── App.css
+│    ├── index.js
+│    └── index.css
+├── package.json
+└── yarn.lock
+```
+>>>>>>> ff0e9708a4cb8283f7e3947a6bbf51b3e5ccfbad
 
 ### `npm test`
 
