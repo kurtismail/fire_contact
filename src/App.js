@@ -1,9 +1,11 @@
-
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import FormComponent from "./components/form/Form";
 
 function App() {
   return (
-    <div className="container mt-2">
-
+    <div>
+      <FormComponent />
     </div>
   );
 }
