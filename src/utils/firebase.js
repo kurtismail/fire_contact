@@ -66,7 +66,7 @@ export const setData = (data, id, setContact) => {
 };
 
 export const delData = (id) => {
-  remove(ref(database, "users/" + id), {})
+  remove(ref(database, `users/${id}`), {})
     .then(() => {
       // Data saved successfully!
       console.log("data removed");
