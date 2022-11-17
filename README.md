@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 fireApp project
+=======
+#firecontact project
+
+# Getting Started with Create React App
+
+>>>>>>> c0a1e7031b99a0943f7a29a91a9f227e027a0032
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 In the project directory, you can run:
