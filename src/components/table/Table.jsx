@@ -1,26 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Container, Table } from "react-bootstrap";
+import React from "react";
+import Container from "react-bootstrap/Container";
+import Table from "react-bootstrap/Table";
 import { TbEdit } from "react-icons/tb";
 import { AiTwotoneDelete } from "react-icons/ai";
-import { delData, readData, setData } from "../../utils/firebase";
+import { DeleteUser, useFetch } from "../../utils/firebase";
 
-const TableComponent = ({ data, setContact }) => {
-  const [table, setTable] = useState([]);
-  console.log("table", Object.entries(table));
-
-  useEffect(() => {
-    return () => {
-      readData(setTable);
-    };
-  }, [data]);
-
-  const eventEdit = (e) => {
-    setData(data, e.target.id, setContact);
-  };
-
-  const eventDel = (e) => {
-    delData(e.target.id);
-  };
+const TableComponent = ({ editUser }) => {
+  const { isLoading, contactList } = useFetch();
 
   return (
     <Container className="mt-3">
@@ -46,65 +32,44 @@ const TableComponent = ({ data, setContact }) => {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(table).map((i) => {
-            const { name, phone, gender, id } = i[1];
-            return (
-              <tr key={id}>
-                <td>{name}</td>
-                <td>{phone}</td>
-                <td>{gender}</td>
+          {isLoading ? (
+            <tr>
+              <td colSpan={5}> Loading</td>
+            </tr>
+          ) : contactList?.lenght === 0 ? (
+            <tr>
+              <td colSpan={5}> No Result Found</td>
+            </tr>
+          ) : (
+            contactList?.map((item, index) => (
+              <tr key={index}>
+                <td>{item.username}</td>
+                <td>{item.phoneNumber}</td>
+                <td>{item.gender}</td>
                 <td>
                   <AiTwotoneDelete
                     color="red"
                     type="button"
-                    id={id}
-                    onClick={eventDel}
+                    onClick={() => DeleteUser(item.id)}
                   />
                 </td>
                 <td>
                   <TbEdit
                     color="orange"
                     type="button"
-                    id={id}
-                    onClick={eventEdit}
+                    onClick={() =>
+                      editUser(
+                        item.id,
+                        item.username,
+                        item.phoneNumber,
+                        item.gender
+                      )
+                    }
                   />
                 </td>
               </tr>
-            );
-          })}
-
-          {/* {table === [] && (
-                <tr>
-                  <td colSpan={5}>Loading...</td>
-                </tr>
-              )} */}
-          {/* {table &&
-            Object.entries(table).map((i) => {
-              const { gender, id, name, phone } = i[1];
-              return (
-                <tr key={id}>
-                  <td>{name}</td>
-                  <td>{phone}</td>
-                  <td>{gender}</td>
-                  <td>
-                    <AiTwotoneDelete
-                      color="red"
-                      type="button"
-                      id={id}
-                      onClick={eventDel}
-                    />
-                  </td>
-                  <td>
-                    <TbEdit
-                      color="orange"
-                      type="button"
-                      id={id}
-                      onClick={eventEdit}
-                    />
-                  </td>
-                </tr>
-              );
-            })}*/}
+            ))
+          )}
         </tbody>
       </Table>
     </Container>

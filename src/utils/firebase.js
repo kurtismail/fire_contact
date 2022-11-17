@@ -1,9 +1,20 @@
 import { initializeApp } from "firebase/app";
-import { child, get, getDatabase, ref, remove, set } from "firebase/database";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import {
+  getDatabase,
+  onValue,
+  push,
+  ref,
+  remove,
+  set,
+  update,
+} from "firebase/database";
+import { useEffect, useState } from "react";
+import {
+  AddUserToast,
+  DeleteUserToast,
+  UpdateUserToast,
+} from "./customToastify";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_apikey,
   authDomain: process.env.REACT_APP_authDomain,
@@ -20,58 +31,45 @@ const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
 
-export function writeUserData(a) {
-  set(ref(database, "users/" + a.id), {
-    name: a.name,
-    phone: a.phone,
-    gender: a.gender,
-    id: a.id,
+export const AddUser = (info) => {
+  const userRef = ref(database, "user/");
+  const newUserRef = push(userRef);
+  set(newUserRef, {
+    username: info.username,
+    phoneNumber: info.phoneNumber,
+    gender: info.gender,
   });
-}
-
-export const readData = (setTable) => {
-  const dbRef = ref(database);
-  get(child(dbRef, `users/`))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        // console.log("database", snapshot.val());
-        console.log("Read database");
-        setTable(snapshot.val());
-      } else {
-        console.log("No data available");
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  AddUserToast("User Added Successfully");
 };
 
-export const setData = (data, id, setContact) => {
-  const dbRef = ref(database);
-  get(child(dbRef, `users/`))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        data.name = snapshot.val().name;
-        data.phone = snapshot.val().phone;
-        data.gender = snapshot.val().gender;
-        console.log("setData");
-        setContact(snapshot.val()[id]);
-      } else {
-        console.log("No data found");
+export const useFetch = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [contactList, setContactList] = useState();
+  useEffect(() => {
+    const userRef = ref(database, "user/");
+
+    onValue(userRef, (snapshot) => {
+      const data = snapshot.val();
+      const userArray = [];
+
+      for (let id in data) {
+        userArray.push({ id, ...data[id] });
       }
-    })
-    .catch((error) => {
-      console.error(error);
+      setContactList(userArray);
+      setIsLoading(false);
     });
+  }, []);
+  return { isLoading, contactList };
 };
 
-export const delData = (id) => {
-  remove(ref(database, `users/${id}`), {})
-    .then(() => {
-      // Data saved successfully!
-      console.log("data removed");
-    })
-    .catch((error) => {
-      // The write failed...
-    });
+export const UpdateUser = (info) => {
+  const updates = {};
+  updates["user/" + info.id] = info;
+  UpdateUserToast("User Updated Successfully");
+  return update(ref(database), updates);
+};
+
+export const DeleteUser = (id) => {
+  remove(ref(database, "user/" + id));
+  DeleteUserToast("User Deleted Successfully");
 };
